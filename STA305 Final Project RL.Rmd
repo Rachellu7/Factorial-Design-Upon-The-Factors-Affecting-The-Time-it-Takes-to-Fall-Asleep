@@ -1,0 +1,163 @@
+---
+title: Report on Factorial Design Upon The Factors Affecting The Time it Takes to
+  Fall Asleep
+author: "RL7394"
+date: "12/04/2021"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Description 
+
+Due to the ongoing global pandemic, most universities are delivering the online classes for the whole year. Students are forced to change their original lifestyles and some of them might have sleeping problems. In this experiment, I would like to study the influence of whether to take melatonin (one pill of 2.88mg), whether to exercise (one hour) during the day and whether to eat (200g) right before going to bed on the amount of time it takes for students to fall asleep. My three null hypotheses for the main effects are stated as follow: 1. Whether to take melatonin has no effect on the amount of time it takes for students to fall asleep. 2. Whether to exercise during the day has no effect on the amount of time it takes for students to fall asleep. 3. Whether to eat right before going to bed has no effect on the amount of time it takes for students to fall asleep. Then the three alternative hypotheses are: 1. Whether to take melatonin has effect on the amount of time is takes for students to fall asleep. 2. Whether to exercise during the day has effect on the amount of time it takes for students to fall asleep. 3. Whether to eat right before going to bed has no effect on the amount of time it takes for students to fall asleep. 
+There are three factors in my experiment, and each factor has two levels. Then a $2^3$ factorial design can apply to my experiment.The experiment unit is university students who are taking online classes, and the response variable is the amount of time that it takes for them to fall asleep and measured in minutes. Those three factors with two levels can be labelled by 1 and -1, and are shown below:
+
+| Factor | Level 1 (-1) | Level 2 (+1) |
+|---------|----------|--------------|
+|Take Melatonin | No | Yes |
+|Exercise | No | Yes | 
+|Eat | No | Yes | 
+
+The procedure of the experiment was designed as followed : I investigated all 8 combinations of experimental conditions. Then I applied the replication design principle to duplicate another factorial experiment with the same conditions, but the run order was randomized. The replication design was for the analysis of variance. Firstly, I randomly found 8 students who were attending online class for the past one year and drew a card from a deck of 8 cards which were labelled from 1-8. The number on the card corresponded to the each condition of the experiment so that the experiment was randomized. I repeated the process of randomly selecting another 8 students for the replicated experiment. The experiment only lasted for one day which was on 13/4/2021 (Wednesday), and the replicated experiment of another randomly selected eight students took place on 14/4/2021 (Thursday). I also used the control principle to eliminate other potential variations. For example, the participants avoided drinking alcohol or coffee during the day. Their daily behavior should be normal as the schedule of a school day (Doing things like studying, cooking). The brand of the melatonin used for the experiment was SleepWell and the dose was one pill (2.88mg) per trial. The amount of exercise was one hour per trial. The amount of food consuming is around 200g (approximately the weight of an apple). For the first condition of the experiment, I asked the participant not to exercise, not to take melatonin and not to eat right before going to sleep. For the next condition, the participant changed only one of his/her behavior while kept other two factors the same. Then all 8 participants were asked to follow the instructions of the different conditions during the day, then the process repeated on the second day. All 8 participants went to bed at the same time (12 am) and did not check cellphone after that. The experiment used a mobile software (Snail Sleep) that could monitor the time it takes for users to fall asleep. They pressed the button “start sleeping” and place it beside their beds during the sleep, then the app started to monitor the time it took for users to fall asleep. The detected data was shown on the app on the next day as soon as they woke up. Each time recorded was the response variable $y_i$, which was the data for the  $i^{th}$ run. Then I will have 16 $y_i$ in total. 
+
+Here is the screenshot for my experiment of the first 8 trials for my factorial design. The APP is in Chinese and I translated into English :
+
+```{r photo, echo=FALSE, fig.align = 'center', out.width = '25%',out.height = '25%',fig.cap="Experimental Picture"}
+knitr::include_graphics("sleep.jpg")
+```
+The experiment data is:
+
+| First Run | Second Run | Melatonin | Exercise | Eat | Time1 | Time2 |
+|------|------|------------|------|------|------|-----|
+| 3 | 9  |-1 | -1 | -1 | 22 | 16 |
+| 6 | 11 |-1 | -1 | 1  | 24 | 17 |
+| 2 | 15 |-1 |  1 | -1 | 13 | 12 |
+| 5 | 14 |-1 |  1 | 1  | 14 | 13 |
+| 1 | 16 | 1 | -1 | -1 | 5  |  7 |
+| 4 | 10 | 1 | -1 | 1  | 8  |  5 |
+| 7 | 12 | 1 |  1 | -1 | 4  | 3  |
+| 8 | 13 | 1 |  1 | 1  | 5  | 6 |
+
+
+## Data Analysis
+
+### Linear Model
+
+The linear model for my $2^3$ factorial design should be:
+
+${Y_i}$ = ${\beta_0}$ + ${\beta_1}{X_{i1}}$ + ${\beta_2}{X_{i2}}$ + ${\beta_3}{X_{i3}}$ + ${\beta_3}{X_{i1}}{X_{i2}}$ + ${\beta_3}{X_{i1}}{X_{i3}}$ + ${\beta_3}{X_{i2}}{X_{i3}}$ + ${\beta_3}{X_{i1}}{X_{i2}}{X_{i3}}$ + ${\epsilon_i}$ 
+
+where the variables ${X_{i1}}{X_{i2}}$ is the interaction between taking melatonin and doing exercise, ${X_{i2}}{X_{i3}}$ is the interaction between doing exercise and eating right before going to bed, etc.
+
+The parameter estimates of main effects and the interaction effects can be obtained by constructing a linear model:
+```{r model, echo=FALSE}
+Time=c(22,24,13,14,5,8,4,5,16,17,12,13,7,5,3,6)
+Melatonin=c(-1,-1,-1,-1,1,1,1,1,-1,-1,-1,-1,1,1,1,1)
+Exercise=c(-1,-1,1,1,-1,-1,1,1,-1,-1,1,1,-1,-1,1,1)
+Eat=c(-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1,-1,1)
+#Above are my data collect
+mod <- lm(Time ~ Melatonin*Exercise*Eat)
+summary(mod)
+```
+
+As it can be observed from the p-value, the p-values of the main effects from melatonin and exercise are 2.35e-05 and 0.00984 respectively, which are smaller than 0.05. Then we have strong evidence to reject the null hypotheses, and conclude that taking melatonin or exercising during the day is significant and has the effect on the amount of time it takes for students to fall asleep. However, the p-value of the main effect from eating right before sleeping is 0.35110, as well as all interaction effects are greater than 0.05 significant level. Then we are able to conclude that the main effect of eating right before sleeping and all interaction effects between the three factors are all not significant in terms of influence the amount of time it takes for students to fall asleep.
+
+### Main Effect and Interaction Effect
+
+Since each variable takes value from "-1" to "1", then the main effects and the interaction effects of the factorial design should be two times the values of estimated coefficients of the linear model. For example:
+
+$\hat{\beta_1}$=-5.5     then  Melatonin= 2*(-5.5)=-11
+
+$\hat{\beta_2}$=-2.215    then Exercise= 2*(-2.125)=-4.25
+
+Then I will compute a table of the main and interaction effects:
+
+| Variable | Effect | 
+|---------|----------|
+| Melatonin | -11.00 | 
+| Exercise | -4.25 |
+| Eat | 1.25 | 
+| Melatonin:Exercise | 2.50 |
+| Melatonin:Eat | 0.00 |
+| Exercise:Eat | 0.25 |
+| Melatonin:Exercise:Eat | 0.50 |
+
+```{r effect table, echo=FALSE}
+#table <-round(2*mod$coefficients,3)
+#table
+```
+
+Then I will interpret the table of the estimated effects. As for the main effect, taking the melatonin (one pill of 2.88mg) leads to a decrease of 11 minutes in average on the time it takes to fall asleep. Exercising (one hour) during the day leads to a decrease of 4.25 minutes in average on the time it takes to fall asleep. Eating right before sleep (200g) leads to an increase of 1.25 minutes on the time it takes to fall asleep. As for the interaction effects, the effect for exercise and eat is 0.25. It can be interpreted by the main effect differences of exercise when the factor eating changes from Level 1 (No) to Level 2 (Yes) leads to an increase of 0.25 minutes in average on the amount of time it takes for the students to fall asleep. The other two interaction effects of two factors can be explained similarly. As for the three factor interactions, the difference of the interaction for melatonin and exercise when the factor eating changes from Level 1 (No) to Level 2 (Yes) leads to an increase of 0.5 minutes in average on the amount of time it takes for students to fall asleep.
+
+### Confidence Interval
+
+```{r, echo=FALSE}
+2*confint(mod)
+```
+
+We multiply the 95% confidence intervals for the regression parameters by 2 to obtain the 95% confidence intervals for the factorial effects. Based on the results, we can observe that only the 95% intervals for the main effects of melatonin and exercise do not contain zero. The estimated intervals for melatonin and exercise are (-13.91,-8.09) and (-7.16,-1.34) respectively. It means that rhe factors melatonin and exercise have significant effect on increasing the amount of time it takes for students to fall asleep. However, the confident interval for the main effect of eating and the all interaction effects do contain zero. It means that they are not significant and fail to reject the null hypotheses. The results are the same as the one from p-value.
+
+
+### Cubeplot
+
+Cubeplot can be used to give a better visualization on the main effects. The cube shows how the design produces 12 comparisons along the 12 edges of the cube: four measures of the effect of taking melatonin, four measures of the effect of exercising and four measures of the effect of eating. On each edge of the cube only one factor is changed while the other two are held constant.
+
+```{r cubeplot, echo=FALSE, message=FALSE}
+library("FrF2")
+cubplot <- cubePlot(mod, "Melatonin", "Exercise", "Eat", main= "Cube plot for the Time it Takes to Fall Asleep")
+```
+
+From the cubeplot, we can observe that the factor melatonin has the most effect on the the response, from 19 to 6. The result is the same as the main effects obtained from the linear model.
+
+
+### Interaction plot
+
+Interaction plots are used to study the interaction between two factors. The plots below show the mean average of time it takes for students to fall asleep for each pair of factors Melatonin:Exercise, Melatonin:Eating and Exercise:Eat.
+
+```{r, echo=FALSE}
+interaction.plot(Melatonin, Exercise, Time, xlab= "Melatonin", 
+                 trace.label="Exercise", ylab= "Time", main = "Interaction Plot for Melatonin:Exercise")
+```
+
+```{r,echo=FALSE}
+interaction.plot(Melatonin, Eat, Time, xlab= "Melatonin", 
+                 trace.label="Eat", ylab= "Time", main = "Interaction Plot for Melatonin:Eat")
+```
+
+```{r, echo=FALSE}
+interaction.plot(Exercise,Eat, Time, xlab= "Exercise", 
+                 trace.label="Eat", ylab= "Time", main = "Interation plot for Exercise:Eat")
+```
+
+For the interaction plot 2 and 3, the two lines in each graph are approximately parallel and indicates no interaction. Also, the p-values for the interaction effects of Melatonin:Eat and Exercise:Eat are 1 and 0.84796 respectively, and both are greater than 0.05. Therefore, we have no evidence to reject the null hypotheses, and the interaction effects between melatonin and eat, between exercise and eat are not significant. Then for the interaction plot 1 (Melatonin:Exercise),the two line are close to crossing while the trend is not obvious enough. The interaction effect between melatonin and exercise is interpreted by the main effect differences of melatonin when the exercise changes from Level 1 (No) to Level 2 (Yes) leads to an increase of 2.5 minutes in average on the amount of time it takes for the students to fall asleep. While the p-value for this interaction effect is 0.08301 and slightly greater than 0.05. Therefore, we cannot conclude that melatonin and exercise have interaction effect.
+
+### Estimated Variance of each effect
+As the summary output obtained from the the linear model, the standard error is the same for all factors. We need to multiply the number by 2, then 2*0.6312=1.2624. 
+
+Then the estimated variance of each each effect is $1.2624^2$=1.5937
+
+### Estimated Variance of the effects from replicated runs
+Base on the formula, ${s_i^2}=\frac{(y_{i1}-y_{i2})^2}{2}$,
+
+where $y_{i1}$ is the firth outcome from the $i^{th}$ run and $diff_i=(y_{i1}-y_{i2})$
+
+A pooled estimated of $\sigma^2$ is:
+
+$s^2=\frac{\sum_{i=1}^8s_i^2}{8}$=$\frac{(18+24.5+0.5+0.5+2+4.5+0.5+0.5)}{8}=8$=6.375
+
+The result is same if we used the formula: Var(effect)=$(\frac{1}{8}+\frac{1}{8})$* $s^2$,  $s^2$=1.5937*4 = 6.375
+
+Then the estimated variance of the 16 observations is 6.375.
+
+## Conclusion
+Based on the data analysis that I conducted, only the null hypotheses of melatonin and exercise are rejected. In other words, they are significant in terms of the effect on the amount of time it takes for students to fall asleep. While the rest main effects and the interaction effects do not influence the amount of time it takes for students to fall asleep. In particular, taking the melatonin of one pill (2.88mg) will decrease the amount of time it takes for students to fall asleep by 11 minutes on average. Doing exercise for one hour will decrease the amount of time it takes for students to fall asleep by 4.25 minutes on average. Since it's better to have a shorter amount of time to fall asleep, and the coefficients of melatonin and exercise are negative as well as their p-values are smaller than 0.05. The optimal experiment conditions is to both take melatonin and do exercise. In the way, the amount of time it takes to fall asleep will be the shortest.
+
+## Limitation
+The first limitation could be the sample size is only 16 which is too small. It's better to increase the sample size and do more replications. Secondly, I randomly select 16 students to be the experiment, their original life styles were unknown. Some of them might need to stay up late due to they are in the different time zones with their universities.Therefore, they might have a hard time falling asleep at 12 o'clock, and bias exist. I should consider this variation when choosing the observations. Also, the order of taking melatonin and eating right before sleep might influence the result of the experiment. However, I don't know whether it has a effect, I should set up another experiment to test the whether the order has the effect on the amount of time it takes for students to fall asleep and specify the order in my original factorial experiment.
+
